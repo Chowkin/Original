@@ -7378,6 +7378,10 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 
 	case TF_BACKSLIDING: //This is the correct implementation as per packet logging information. [Skotlex]
 		clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
+		if (sd && (sd->sc.data[SC_CLOSECONFINE2] || sd->sc.data[SC_ANKLE] || sd->sc.data[SC_SPIDERWEB])) {
+			clif_skill_fail(sd, sd->menuskill_id, 0, 0);
+			break;
+		}
 		skill_blown(src,bl,skill_get_blewcount(skill_id,skill_lv),unit_getdir(bl),0);
 		break;
 
@@ -11140,6 +11144,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		return 0; // not to consume item.
 
 	case MO_BODYRELOCATION:
+		if (sd && (sd->sc.data[SC_CLOSECONFINE2] || sd->sc.data[SC_ANKLE] || sd->sc.data[SC_SPIDERWEB])) {
+			clif_skill_fail(sd, sd->menuskill_id, 0, 0);
+			break;
+		}
 		if (unit_movepos(src, x, y, 1, 1)) {
 #if PACKETVER >= 20111005
 			clif_snap(src, src->x, src->y);
