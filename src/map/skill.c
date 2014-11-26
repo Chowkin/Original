@@ -7395,7 +7395,14 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			) {
 				x = src->x;
 				y = src->y;
-			} else {
+			}
+
+			if (sd && (sd->sc.data[SC_CLOSECONFINE2] || sd->sc.data[SC_ANKLE] || sd->sc.data[SC_SPIDERWEB])) {
+				clif_skill_fail(sd, sd->menuskill_id, 0, 0);
+				break;
+			}
+
+			else {
 				x = src->x + dirx[dir]*skill_lv*2;
 				y = src->y + diry[dir]*skill_lv*2;
 			}
